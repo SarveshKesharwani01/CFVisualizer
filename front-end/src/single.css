@@ -1,0 +1,56 @@
+.user {
+    background-color: #fff;
+    width: 500px;
+    height: 100px;
+    margin-left: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rating{
+    background-color: white;
+    border-radius: 2%;
+    width: 60%;
+    height: 30%;
+    margin: auto;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.ratingpara{  
+    margin-left: 35%;
+    margin-bottom: 1%;
+    font-size: 1em;
+}
+.piechart{
+    /* flex:  0.5; */
+    background-color: red;
+    margin-left: 20%;
+   
+}
+.piechart2{
+    
+    background-color: green;
+
+}
+.content-table{
+    
+    background-color: white;
+    font-size: 1em;
+    margin: auto; 
+}
+
+.bigtable{
+    justify-content: center;
+    align-items: center;
+    background-color: blue;
+}
+
+.pie-container{
+    display: flex;
+    /* grid-template-columns: 1fr 1fr  ; */
+
+    
+}

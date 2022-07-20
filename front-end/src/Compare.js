@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Chartbar from "./Chartbar";
 import { PieChart, Pie } from "recharts";
 import Show from "./Show";
+import CollapsibleExample from "./CollapsibleExample";
 export default function Compare() {
   const { state } = useLocation();
   const [user, setUser] = useState([]);
@@ -19,13 +20,12 @@ export default function Compare() {
         const response = await fetch(
           `https://codeforces.com/api/user.rating?handle=${username}`
         );
-
+        const userdata = await response.json();
         const submission = await fetch(
           `https://codeforces.com/api/user.status?handle=${username}&from=1&count=5000`
         );
-        const userdata = await response.json();
         const submission_data = await submission.json();
-
+        await new Promise(r => setTimeout(r, 2000));
         const submit = new Map();
         const language = new Map();
         const rate = new Map();
@@ -42,10 +42,10 @@ export default function Compare() {
             let val = problem_name.get(sub.problem.name);
             if (!val) {
               cnt1++;
+              cnt2++;
             }
             problem_name.set(sub.problem.name, 1);
           }
-          cnt2++;
           language.set(sub.programmingLanguage, num);
           submit.set(sub.verdict, cnt);
           rate.set(sub.problem.rating, cnt1);
@@ -86,16 +86,18 @@ export default function Compare() {
         setUser((previous) => {
           return [{ ...previous }, userdata.result.reverse()];
         });
-        console.log(arr3);
+        // console.log(arr3);
       };
       fetchdata();
     }, [username]);
   }
+  Userinfo(username1);
 
   Userinfo(username2);
 
   return (
     <div>
+      <CollapsibleExample />
       {username1}
       {username2}
     </div>
