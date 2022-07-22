@@ -27,7 +27,7 @@ export default function Individual() {
       if (response.ok) {
         setExist(1);
         const submission = await fetch(
-          `https://codeforces.com/api/user.status?handle=${username1}&from=1&count=5000`
+          `https://codeforces.com/api/user.status?handle=${username1}`
         );
         const userdata = await response.json();
         const submission_data = await submission.json();
