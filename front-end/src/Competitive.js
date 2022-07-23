@@ -4,7 +4,9 @@ import "./index.css";
 import styled from "styled-components";
 import Button from "./input/Button.js";
 import Chart from "react-google-charts";
-
+import "./compare.css";
+import ChartbarCompare from "./ChartbarCompare";
+import Chartbar2 from "./Chartbar2";
 export default function Competitive() {
   const input1 = useRef(null);
   const input2 = useRef(null);
@@ -94,14 +96,13 @@ export default function Competitive() {
       const cnt = common_rate.get(key) ?? 0;
       if (!cnt && key) common_rate.set(key, 1);
     }
-    common_rating.push(["", userN1, userN2]);
     for (const [key, value] of common_rate) {
       if (key !== "undefined") {
-        common_rating.push([
-          key,
-          user1.rate.get(key) ?? 0,
-          user2.rate.get(key) ?? 0,
-        ]);
+        common_rating.push({
+          name: key,
+          [userN1]: user1.rate.get(key) ?? 0,
+          [userN2]: user2.rate.get(key) ?? 0,
+        });
       }
     }
 
@@ -114,16 +115,15 @@ export default function Competitive() {
       const cnt = common_lvl.get(key) ?? 0;
       if (!cnt) common_lvl.set(key, 1);
     }
-    common_level.push(["", userN1, userN2]);
     for (const [key, value] of common_lvl) {
-      common_level.push([
-        key,
-        user1.level.get(key) ?? 0,
-        user2.level.get(key) ?? 0,
-      ]);
+      common_level.push({
+        name: key,
+        [userN1]: user1.level.get(key) ?? 0,
+        [userN2]: user2.level.get(key) ?? 0,
+      });
     }
-    common_rating.sort((a, b) => Number(a[0]) - Number(b[0]));
-    common_level.sort();
+    common_rating.sort((a, b) => Number(a.name) - Number(b.name));
+    common_level.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
   function common_contest(contest, user1, user2) {
     const user1map = new Map();
@@ -163,16 +163,21 @@ export default function Competitive() {
       `${user1} Rating Change`,
       `${user2} Rating Change`,
     ]);
+    const arr1 = [];
     for (const [key, value] of com_con) {
       const u1 = user1map.get(key);
       const u2 = user2map.get(key);
-      common_Contest.push([
+      arr1.push([
         key,
         String(u1[0]),
         String(u2[0]),
         String(u1[1]) + " -> " + String(u1[2]),
         String(u2[1]) + " -> " + String(u2[2]),
       ]);
+    }
+    arr1.reverse();
+    for (let i = 0; i < arr1.length; i++) {
+      common_Contest.push(arr1[i]);
     }
   }
   function details() {
@@ -211,20 +216,37 @@ export default function Competitive() {
           Common(userSub1, userSub2, username11, username22);
           common_contest(contest, username11, username22);
           setRatingGraph([
-            ["", username11, username22],
-            ["Current Rating", contest[0].curr, contest[1].curr],
-            ["Max Rating", contest[0].maxRate, contest[1].maxRate],
-            ["Min Rating", contest[0].minRate, contest[1].minRate],
+            {
+              name: "Current Rating",
+              [username11]: contest[0].curr,
+              [username22]: contest[1].curr,
+            },
+            {
+              name: "Max Rating",
+              [username11]: contest[0].maxRate,
+              [username22]: contest[1].maxRate,
+            },
+            {
+              name: "Min Rating",
+              [username11]: contest[0].minRate,
+              [username22]: contest[1].minRate,
+            },
           ]);
           setContest([
-            ["", "Contest"],
-            [username11, contest[0].length],
-            [username22, contest[1].length],
+            { name: username11, contest: contest[0].length },
+            { name: username22, contest: contest[1].length },
           ]);
           setRatingChange([
-            ["", username11, username22],
-            ["Max Up", contest[0].maxUp, contest[1].maxUp],
-            ["Max Down", contest[0].maxDown, contest[1].maxDown],
+            {
+              name: "Max Up",
+              [username11]: contest[0].maxUp,
+              [username22]: contest[1].maxUp,
+            },
+            {
+              name: "Max Down",
+              [username11]: contest[0].maxDown,
+              [username22]: contest[1].maxDown,
+            },
           ]);
           setupdown([
             ["Best And Worst", username11, username22],
@@ -256,7 +278,11 @@ export default function Competitive() {
         className="styling"
       >
         <MainContainer>
-          <WelcomeText>Welcome</WelcomeText>
+          <WelcomeText
+            style={{ fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
+          >
+            Welcome
+          </WelcomeText>
           <InputContainer>
             <StyledInput
               type="text"
@@ -264,7 +290,11 @@ export default function Competitive() {
               ref={input1}
             />
           </InputContainer>
-          <ErrorText>{!exist1 && "User does not exist"}</ErrorText>
+          <ErrorText
+            style={{ fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
+          >
+            {!exist1 && "User does not exist"}
+          </ErrorText>
           <InputContainer>
             <StyledInput
               type="text"
@@ -272,8 +302,16 @@ export default function Competitive() {
               ref={input2}
             />
           </InputContainer>
-          <ErrorText>{!exist2 && "User does not exist"}</ErrorText>
-          <ErrorText>{exist2 === 3 && "Same User"}</ErrorText>
+          <ErrorText
+            style={{ fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
+          >
+            {!exist2 && "User does not exist"}
+          </ErrorText>
+          <ErrorText
+            style={{ fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
+          >
+            {exist2 === 3 && "Same User"}
+          </ErrorText>
           <ButtonContainer>
             <Button content="Submit" onSubmit={onSubmit} />
           </ButtonContainer>
@@ -283,56 +321,31 @@ export default function Competitive() {
   }
   function Rating() {
     return (
-      <Chart
-        chartType="Bar"
-        width="100%"
-        height="400px"
-        data={RatingGraph}
-        formatters={[
-          {
-            type: "NumberFormat",
-            column: 1,
-            options: {
-              fractionDigits: 0,
-            },
-          },
-          {
-            type: "NumberFormat",
-            column: 2,
-            options: {
-              fractionDigits: 0,
-            },
-          },
-        ]}
-      />
+      <ChartbarCompare data={RatingGraph} var1={username1} var2={username2} />
     );
   }
   function Contest() {
-    return (
-      <Chart
-        chartType="Bar"
-        width="100%"
-        height="400px"
-        data={noofContest}
-        formatters={[
-          {
-            type: "NumberFormat",
-            column: 1,
-            options: {
-              fractionDigits: 0,
-            },
-          },
-        ]}
-      />
-    );
+    return <Chartbar2 data={noofContest} var={"contest"} />;
   }
   function RateChange() {
     return (
+      <ChartbarCompare data={ratingChange} var1={username1} var2={username2} />
+    );
+  }
+  function UpDown() {
+    return (
       <Chart
-        chartType="Bar"
+        chartType="Table"
+        data={updown}
         width="100%"
-        height="400px"
-        data={ratingChange}
+        options={{
+          allowHtml: true,
+          cssClassNames: {
+            tableCell: "game-cell",
+            headerRow: "head-cell",
+            oddTableRow: "odd-cell",
+          },
+        }}
         formatters={[
           {
             type: "NumberFormat",
@@ -348,53 +361,94 @@ export default function Competitive() {
               fractionDigits: 0,
             },
           },
+          
         ]}
       />
     );
   }
-  function UpDown() {
-    return <Chart chartType="Table" data={updown} width="100%" />;
-  }
   function Levels() {
-    return <Chart chartType="Bar" width="100%" height="400px" data={levels} />;
+    return <ChartbarCompare data={levels} var1={username1} var2={username2} />;
   }
   function Ratings() {
+    return <ChartbarCompare data={ratings} var1={username1} var2={username2} />;
+  }
+  function CommonContest() {
     return (
       <Chart
-        chartType="Bar"
+        chartType="Table"
+        data={commonContest}
         width="100%"
-        height="400px"
-        data={ratings}
-        options={{ hAxis: { format: "none", title: "hi" } }}
+        options={{
+          allowHtml: true,
+          cssClassNames: {
+            tableCell: "game-cell",
+            headerRow: "head-cell",
+            oddTableRow: "odd-cell",
+          },
+        }}
+        formatters={[
+          {
+            type: "NumberFormat",
+            column: 1,
+            options: {
+              fractionDigits: 0,
+            },
+          },
+          {
+            type: "NumberFormat",
+            column: 2,
+            options: {
+              fractionDigits: 0,
+            },
+          },
+          {
+            type: "NumberFormat",
+            column: 3,
+            options: {
+              fractionDigits: 0,
+            },
+          },
+          {
+            type: "NumberFormat",
+            column: 4,
+            options: {
+              fractionDigits: 0,
+            },
+          },
+        ]}
       />
     );
   }
-  function CommonContest() {
-    return <Chart chartType="Table" data={commonContest} width="100%" />;
-  }
   function Details() {
     return (
-      <div style={{ backgroundColor: "white" }}>
-        <div>
+      <div>
+        <div className="compare-head heading heading-light">
+          <div>
+            <h2>
+              {username1} | {username2}
+            </h2>
+          </div>
+        </div>
+        <div className="ratingcompare">
           <Rating />
         </div>
-        <div>
+        <div className="contestcompare">
           <Contest />
         </div>
-        <div>
+        <div className="ratingcompare">
           <RateChange />
         </div>
-        <div>
+        <div className="updown1">
           <UpDown />
         </div>
         <div>{/* Timeline */}</div>
-        <div>
+        <div className="ratingcompare2">
           <Levels />
         </div>
-        <div>
+        <div className="ratingcompare2">
           <Ratings />
         </div>
-        <div>
+        <div className="bigtable2">
           <CommonContest />
         </div>
       </div>
@@ -416,9 +470,12 @@ const MainContainer = styled.div`
   height: 60vh;
   width: 30vw;
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 #1c1e26;
   backdrop-filter: blur(8.5px);
   -webkit-backdrop-filter: blur(8.5px);
+  -webkit-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+  box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
   border-radius: 10px;
   color: #ffffff;
   text-transform: uppercase;
@@ -485,7 +542,7 @@ const ErrorText = styled.p`
 
 const StyledInput = styled.input`
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 #1c1e26;
   border-radius: 2rem;
   width: 80%;
   height: 3rem;
@@ -497,12 +554,12 @@ const StyledInput = styled.input`
   font-weight: bold;
   &:focus {
     display: inline-block;
-    box-shadow: 0 0 0 0.2rem #b9abe0;
+    box-shadow: 0 0 0 0.2rem #c4a88a;
     backdrop-filter: blur(12rem);
     border-radius: 2rem;
   }
   &::placeholder {
-    color: #b9abe099;
+    color: #c4a88a;
     font-weight: 100;
     font-size: 1rem;
   }

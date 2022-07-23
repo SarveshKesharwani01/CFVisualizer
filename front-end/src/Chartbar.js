@@ -24,11 +24,11 @@ function Chartbar(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+        <XAxis dataKey="name" style={{fontFamily: "'Cormorant SC', serif"}} />
+        <YAxis style={{fontFamily: "'Cormorant SC', serif"}} />
         <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" />
+        <Legend wrapperStyle={{fontFamily: "'Cormorant SC', serif"}} />
+        <Bar dataKey={props.var} fill="#c4a88a" />
       </BarChart>
     </ResponsiveContainer>
   );

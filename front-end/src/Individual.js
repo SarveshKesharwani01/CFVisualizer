@@ -7,6 +7,7 @@ import Chartbar from "./Chartbar";
 import { Chart } from "react-google-charts";
 import Show from "./Show";
 import "./single.css";
+import PuffLoader from 'react-spinners/PuffLoader'
 export default function Individual() {
   const input = useRef(null);
   const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ export default function Individual() {
   const [lang, setLang] = useState([]);
   const [rating, setRating] = useState([]);
   const [problem_num, setProblem_num] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   function details() {
     const fetchdata = async () => {
       const username1 = input.current.value;
@@ -56,8 +57,8 @@ export default function Individual() {
           rate.set(sub.problem.rating, cnt1);
           problem_number.set(sub.problem.index.substring(0, 1), cnt2);
         });
-        const arr = [["Verdict", "count"]];
-        const arr1 = [["Verdict", "count"]];
+        const arr = [["Verdict", "rating"]];
+        const arr1 = [["Verdict", "rating"]];
         const arr2 = [];
         const arr4 = [];
         const verdicts = new Map();
@@ -74,11 +75,11 @@ export default function Individual() {
           if (key !== undefined) arr1.push([key, value]);
         }
         for (const [key, value] of rate) {
-          if (key !== undefined) arr2.push({ name: key, count: value });
+          if (key !== undefined) arr2.push({ name: key, Rating: value });
         }
         for (const [key, value] of problem_number) {
           if (key !== undefined) {
-            arr4.push({ name: key, count: value });
+            arr4.push({ name: key, Question: value });
           }
         }
         const arr3 = [...arr2].sort((a, b) => a.name - b.name);
@@ -90,6 +91,7 @@ export default function Individual() {
         setRating(arr3);
         setProblem_num(arr5);
         setUser(userdata.result.reverse());
+        setLoading(false);
       } else {
         setExist(false);
       }
@@ -105,28 +107,32 @@ export default function Individual() {
   function Details() {
     return (
       <div>
-        <div className="user">{username}</div>
+        <div>
+        <div className="heading heading-light"><h1>{username}</h1></div>
+        </div>
         <div className="rating">
           <div className="ratingpara">Problem rating of {username}</div>
-          <Chartbar data={rating} />
+          <Chartbar data={rating} var="Rating"/>
         </div>
         <div className="rating">
           <div className="ratingpara">Level of {username}</div>
-          <Chartbar data={problem_num} />
+          <Chartbar data={problem_num} var="Question"/>
         </div>
         <div className="pie-container">
-          <div className="piechart">
+          <div className="piechart" >
             <Chart
               chartType="PieChart"
               data={sub}
               options={{
-                title: "Verdicts",
+                backgroundColor: "#1c1e26",
+                title: `Verdicts of ${username}`,
                 is3D: true,
                 pieSliceText: "label",
                 legend: "none",
+                titleTextStyle: {color: "#c4a88a", fontName: "'Cormorant SC', serif", fontSize: "20"}
               }}
-              width="800px"
-              height="800px"
+              width="600px"
+              height="600px"
             />
           </div>
 
@@ -135,13 +141,15 @@ export default function Individual() {
               chartType="PieChart"
               data={lang}
               options={{
-                title: "Verdicts",
+                backgroundColor: "#1c1e26", 
+                title: `Languages used by ${username}`,
                 is3D: true,
                 pieSliceText: "label",
                 legend: "none",
+                titleTextStyle: {color: "#c4a88a", fontName: "'Cormorant SC', serif", fontSize: "20"}
               }}
-              width="800px"
-              height="800px"
+              width="600px"
+              height="600px"
             />
           </div>
         </div>
@@ -163,7 +171,7 @@ export default function Individual() {
       >
         {/* <Username setsubmit={onSubmit} exist={exist}/> */}
         <MainContainer>
-          <WelcomeText>Welcome</WelcomeText>
+          <WelcomeText style={{fontFamily: "'Cormorant SC', serif", color: "#c4a88a"}}>Welcome</WelcomeText>
           <InputContainer>
             <StyledInput
               type="text"
@@ -183,7 +191,8 @@ export default function Individual() {
     <div>
       <CollapsibleExample />
       {exist !== 1 && <Form />}
-      {exist === 1 && <Details />}
+      {/* {exist === 1 && loading && <PuffLoader size={30} color={"#c4a88a"} loading={loading}/>} */}
+      {exist === 1 && !loading && <Details />}
     </div>
   );
 }
@@ -195,9 +204,12 @@ const MainContainer = styled.div`
   height: 50vh;
   width: 30vw;
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 #1c1e26;
   backdrop-filter: blur(8.5px);
   -webkit-backdrop-filter: blur(8.5px);
+  -webkit-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+    box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
   border-radius: 10px;
   color: #ffffff;
   text-transform: uppercase;
@@ -264,7 +276,7 @@ const ErrorText = styled.p`
 
 const StyledInput = styled.input`
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 32px 0 #1c1e26;
   border-radius: 2rem;
   width: 80%;
   height: 3rem;
@@ -276,12 +288,12 @@ const StyledInput = styled.input`
   font-weight: bold;
   &:focus {
     display: inline-block;
-    box-shadow: 0 0 0 0.2rem #b9abe0;
+    box-shadow: 0 0 0 0.2rem #c4a88a;
     backdrop-filter: blur(12rem);
     border-radius: 2rem;
   }
   &::placeholder {
-    color: #b9abe099;
+    color: #c4a88a;
     font-weight: 100;
     font-size: 1rem;
   }

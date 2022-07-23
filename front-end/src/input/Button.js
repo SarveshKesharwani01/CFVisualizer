@@ -6,7 +6,7 @@ export default function Button({ content }) {
 }
 
 const StyledButton = styled.button`
-  background: linear-gradient(to right, #14163c 0%, #03217b 79%);
+  background: linear-gradient(to right, #1c1e26 0%, #c4a88a 79%);
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   width: 65%;

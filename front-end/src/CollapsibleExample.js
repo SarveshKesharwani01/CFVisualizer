@@ -13,24 +13,24 @@ function CollapsibleExample() {
       expand="lg"
       // bg="dark"
       variant="dark"
-      // style={{ backgroundColor: "transperant"}} // change
+      style={{borderBottom: "2px solid #5a5a5a"}}
     >
       <Container style={{ maxWidth: "1400px" }}>
-        <Navbar.Brand href="/individual">Codeforces Analyser</Navbar.Brand>
+        <Navbar.Brand href="/individual" style={{fontFamily: "'Cormorant SC', serif", color: "#c4a88a"}}>Codeforces Analyser</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto"></Nav>
           <Nav>
             <Nav.Link
               href="/individual"
-              style={{ width: "126.03px", fontSize: "18px", color: "white" }}
+              style={{ width: "130.03px", fontSize: "18px",fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
             >
               {" "}
-              <BsPersonCircle style={{ marginRight: "4px" }} /> Individual
+              <BsPersonCircle style={{ marginRight: "4px"}} /> Individual
             </Nav.Link>
             <Nav.Link
               href="/compare"
-              style={{ width: "115.86", fontSize: "18px", color: "white" }}
+              style={{ width: "115.86", fontSize: "18px", fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
             >
               {" "}
               <BsFillPersonPlusFill style={{ marginRight: "4px" }} />
@@ -38,7 +38,7 @@ function CollapsibleExample() {
             </Nav.Link>
             <Nav.Link
               href="#deets"
-              style={{ width: "130.65px", fontSize: "18px", color: "white" }}
+              style={{ width: "132.65px", fontSize: "18px", fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
             >
               <IoIosMail style={{ marginRight: "4px" }} />
               Contact Us

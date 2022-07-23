@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Competitive from "./Competitive";
 import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
+ 
   return (
     <div>
       <Router>
