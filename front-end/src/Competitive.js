@@ -7,6 +7,7 @@ import Chart from "react-google-charts";
 import "./compare.css";
 import ChartbarCompare from "./ChartbarCompare";
 import Chartbar2 from "./Chartbar2";
+import PuffLoader from "react-spinners/PuffLoader";
 export default function Competitive() {
   const input1 = useRef(null);
   const input2 = useRef(null);
@@ -267,6 +268,7 @@ export default function Competitive() {
   }
   function onSubmit(event) {
     event.preventDefault();
+    setLoading(true);
     details();
   }
   function Form() {
@@ -361,7 +363,6 @@ export default function Competitive() {
               fractionDigits: 0,
             },
           },
-          
         ]}
       />
     );
@@ -438,9 +439,9 @@ export default function Competitive() {
         <div className="ratingcompare">
           <RateChange />
         </div>
-        <div className="updown1">
+        {/* <div className="updown1">
           <UpDown />
-        </div>
+        </div> */}
         <div>{/* Timeline */}</div>
         <div className="ratingcompare2">
           <Levels />
@@ -457,7 +458,12 @@ export default function Competitive() {
   return (
     <div>
       <CollapsibleExample />
-      {loading && <Form />}
+      {exist1 !==1 && exist2 !== 1 && <Form />}
+      {loading && (
+        <div className="loadingscreen">
+          <PuffLoader size={30} color={"#c4a88a"} loading={loading} />
+        </div>
+      )}
       {exist1 === 1 && exist2 === 1 && !loading && <Details />}
     </div>
   );

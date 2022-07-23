@@ -7,7 +7,9 @@ import Chartbar from "./Chartbar";
 import { Chart } from "react-google-charts";
 import Show from "./Show";
 import "./single.css";
-import PuffLoader from 'react-spinners/PuffLoader'
+import PuffLoader from "react-spinners/PuffLoader";
+
+
 export default function Individual() {
   const input = useRef(null);
   const [username, setUsername] = useState("");
@@ -17,7 +19,7 @@ export default function Individual() {
   const [lang, setLang] = useState([]);
   const [rating, setRating] = useState([]);
   const [problem_num, setProblem_num] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   function details() {
     const fetchdata = async () => {
       const username1 = input.current.value;
@@ -101,6 +103,7 @@ export default function Individual() {
 
   function onSubmit(event) {
     event.preventDefault();
+    setLoading(true);
     details();
   }
 
@@ -108,18 +111,20 @@ export default function Individual() {
     return (
       <div>
         <div>
-        <div className="heading heading-light"><h1>{username}</h1></div>
+          <div className="heading heading-light">
+            <h1>{username}</h1>
+          </div>
         </div>
         <div className="rating">
           <div className="ratingpara">Problem rating of {username}</div>
-          <Chartbar data={rating} var="Rating"/>
+          <Chartbar data={rating} var="Rating" />
         </div>
         <div className="rating">
           <div className="ratingpara">Level of {username}</div>
-          <Chartbar data={problem_num} var="Question"/>
+          <Chartbar data={problem_num} var="Question" />
         </div>
         <div className="pie-container">
-          <div className="piechart" >
+          <div className="piechart">
             <Chart
               chartType="PieChart"
               data={sub}
@@ -129,7 +134,11 @@ export default function Individual() {
                 is3D: true,
                 pieSliceText: "label",
                 legend: "none",
-                titleTextStyle: {color: "#c4a88a", fontName: "'Cormorant SC', serif", fontSize: "20"}
+                titleTextStyle: {
+                  color: "#c4a88a",
+                  fontName: "'Cormorant SC', serif",
+                  fontSize: "20",
+                },
               }}
               width="600px"
               height="600px"
@@ -141,12 +150,16 @@ export default function Individual() {
               chartType="PieChart"
               data={lang}
               options={{
-                backgroundColor: "#1c1e26", 
+                backgroundColor: "#1c1e26",
                 title: `Languages used by ${username}`,
                 is3D: true,
                 pieSliceText: "label",
                 legend: "none",
-                titleTextStyle: {color: "#c4a88a", fontName: "'Cormorant SC', serif", fontSize: "20"}
+                titleTextStyle: {
+                  color: "#c4a88a",
+                  fontName: "'Cormorant SC', serif",
+                  fontSize: "20",
+                },
               }}
               width="600px"
               height="600px"
@@ -171,7 +184,11 @@ export default function Individual() {
       >
         {/* <Username setsubmit={onSubmit} exist={exist}/> */}
         <MainContainer>
-          <WelcomeText style={{fontFamily: "'Cormorant SC', serif", color: "#c4a88a"}}>Welcome</WelcomeText>
+          <WelcomeText
+            style={{ fontFamily: "'Cormorant SC', serif", color: "#c4a88a" }}
+          >
+            Welcome
+          </WelcomeText>
           <InputContainer>
             <StyledInput
               type="text"
@@ -188,10 +205,18 @@ export default function Individual() {
     );
   }
   return (
-    <div>
+    <div className="individual">
       <CollapsibleExample />
       {exist !== 1 && <Form />}
-      {/* {exist === 1 && loading && <PuffLoader size={30} color={"#c4a88a"} loading={loading}/>} */}
+      {loading && (
+        <div className="loadingscreen">
+          <PuffLoader
+            size={30}
+            color={"#c4a88a"}
+            loading={loading}
+          />
+        </div>
+      )}
       {exist === 1 && !loading && <Details />}
     </div>
   );
@@ -208,8 +233,8 @@ const MainContainer = styled.div`
   backdrop-filter: blur(8.5px);
   -webkit-backdrop-filter: blur(8.5px);
   -webkit-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
-    box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
+  box-shadow: -1px 1px 5px 9px rgba(0, 0, 0, 0.75);
   border-radius: 10px;
   color: #ffffff;
   text-transform: uppercase;
