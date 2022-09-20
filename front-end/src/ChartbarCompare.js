@@ -8,21 +8,9 @@ import {
   Tooltip,
   LabelList,
   Legend,
-  Label,
   ResponsiveContainer,
 } from "recharts";
-const barColor = ["#ffdc73", "#bf9b30"];
-const AxisLabel = ({ axisType, x, y, width, height, stroke, children }) => {
-  const isVert = axisType === "yAxis";
-  const cx = isVert ? x : x + width / 2;
-  const cy = isVert ? height / 2 + y : y + height + 10;
-  // const rot = isVert ? `270 ${cx} ${cy}` : 0;
-  return (
-    <text transform={`rotate(270)`} textAnchor="middle" stroke={stroke}>
-      {children}
-    </text>
-  );
-};
+
 function ChartbarCompare(props) {
   return (
     <ResponsiveContainer width="100%" aspect={3}>
