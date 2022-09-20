@@ -7,7 +7,6 @@ import {
   Cell,
   CartesianGrid,
   Tooltip,
-  Legend,
   LabelList,
   ResponsiveContainer,
 } from "recharts";

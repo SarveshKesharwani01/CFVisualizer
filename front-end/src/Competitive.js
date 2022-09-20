@@ -21,7 +21,7 @@ export default function Competitive() {
   const [RatingGraph, setRatingGraph] = useState([]);
   const [noofContest, setContest] = useState([]);
   const [ratingChange, setRatingChange] = useState([]);
-  const [updown, setupdown] = useState([]);
+  // const [updown, setupdown] = useState([]);
   const [levels, setLevels] = useState([]);
   const [ratings, setratings] = useState([]);
   const [commonContest, setCommonContest] = useState([]);
@@ -89,15 +89,15 @@ export default function Competitive() {
   }
   function Common(user1, user2, userN1, userN2) {
     const common_rate = new Map();
-    for (const [key, value] of user1.rate) {
+    for (const [key] of user1.rate) {
       const cnt = common_rate.get(key) ?? 0;
       if (!cnt && key) common_rate.set(key, 1);
     }
-    for (const [key, value] of user2.rate) {
+    for (const [key] of user2.rate) {
       const cnt = common_rate.get(key) ?? 0;
       if (!cnt && key) common_rate.set(key, 1);
     }
-    for (const [key, value] of common_rate) {
+    for (const [key] of common_rate) {
       if (key !== "undefined") {
         common_rating.push({
           name: key,
@@ -108,15 +108,15 @@ export default function Competitive() {
     }
 
     const common_lvl = new Map();
-    for (const [key, value] of user1.level) {
+    for (const [key] of user1.level) {
       const cnt = common_lvl.get(key) ?? 0;
       if (!cnt) common_lvl.set(key, 1);
     }
-    for (const [key, value] of user2.level) {
+    for (const [key] of user2.level) {
       const cnt = common_lvl.get(key) ?? 0;
       if (!cnt) common_lvl.set(key, 1);
     }
-    for (const [key, value] of common_lvl) {
+    for (const [key] of common_lvl) {
       common_level.push({
         name: key,
         [userN1]: user1.level.get(key) ?? 0,
@@ -149,7 +149,7 @@ export default function Competitive() {
       if (!cnt) com_con.set(contest[1].common[i].name, 1);
     }
     const arr = [];
-    for (const [key, value] of com_con) {
+    for (const [key] of com_con) {
       const cnt1 = user1map.get(key);
       const cnt2 = user2map.get(key);
       if (!cnt1 || !cnt2) arr.push(key);
@@ -165,7 +165,7 @@ export default function Competitive() {
       `${user2} Rating Change`,
     ]);
     const arr1 = [];
-    for (const [key, value] of com_con) {
+    for (const [key] of com_con) {
       const u1 = user1map.get(key);
       const u2 = user2map.get(key);
       arr1.push([
@@ -249,11 +249,11 @@ export default function Competitive() {
               [username22]: contest[1].maxDown,
             },
           ]);
-          setupdown([
-            ["Best And Worst", username11, username22],
-            ["Best", contest[0].bestRank, contest[1].bestRank],
-            ["Worst", contest[0].worstRank, contest[1].worstRank],
-          ]);
+          // setupdown([
+          //   ["Best And Worst", username11, username22],
+          //   ["Best", contest[0].bestRank, contest[1].bestRank],
+          //   ["Worst", contest[0].worstRank, contest[1].worstRank],
+          // ]);
           setLevels(common_level);
           setratings(common_rating);
           setCommonContest(common_Contest);
@@ -332,39 +332,6 @@ export default function Competitive() {
   function RateChange() {
     return (
       <ChartbarCompare data={ratingChange} var1={username1} var2={username2} />
-    );
-  }
-  function UpDown() {
-    return (
-      <Chart
-        chartType="Table"
-        data={updown}
-        width="100%"
-        options={{
-          allowHtml: true,
-          cssClassNames: {
-            tableCell: "game-cell",
-            headerRow: "head-cell",
-            oddTableRow: "odd-cell",
-          },
-        }}
-        formatters={[
-          {
-            type: "NumberFormat",
-            column: 1,
-            options: {
-              fractionDigits: 0,
-            },
-          },
-          {
-            type: "NumberFormat",
-            column: 2,
-            options: {
-              fractionDigits: 0,
-            },
-          },
-        ]}
-      />
     );
   }
   function Levels() {
