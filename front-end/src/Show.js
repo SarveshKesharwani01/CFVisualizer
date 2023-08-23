@@ -2,7 +2,7 @@ import React from "react";
 import "./single.css";
 import Chart from "react-google-charts";
 export default function Show(props) {
-  const arr = [["Contest", "Rank", "Old Rating", "New Rating", "Perfomance"]];
+  const arr = [["Contest", "Rank", "Old Rating", "New Rating", "Performance"]];
   const rank = [];
   const rating = [];
   for (let i = 0; i < props.table.length; i++) {
